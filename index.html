@@ -231,7 +231,7 @@
   /* ================= gold dust canvas ================= */
   #petalCanvas{
     position:fixed; inset:0; width:100vw; height:100vh;
-    pointer-events:none; z-index:5; opacity:.7;
+    pointer-events:none; z-index:150; opacity:1;
   }
 
   /* ---------- scroll-progress rail ---------- */
@@ -460,9 +460,53 @@
   .footer-names{ font-size:clamp(1.6rem,5vw,2.4rem); color:var(--gold-deep); }
   .footer-note{ font-style:italic; color:var(--ink-soft); opacity:.75; font-size:.92rem; max-width:36ch; }
 
+  /* ---------- hero flowers ---------- */
+  .g-set{ position:absolute; top:0; width:104px; height:0; z-index:0; pointer-events:none; }
+  .g-left{ left:0; transform-origin:top left; }
+  .g-right{ right:0; transform-origin:top right; }
+  .strand{ position:absolute; top:-6px; width:26px; transform-origin:50% 0; animation:sway 5s ease-in-out infinite alternate; }
+  .strand svg{ display:block; filter:drop-shadow(0 3px 3px rgba(90,64,20,.3)); }
+  @keyframes sway{ from{ transform:rotate(-2.6deg); } to{ transform:rotate(2.6deg); } }
+  @media (max-width: 620px){ .g-set{ transform:scale(.68); } }
+  .hero-floor{ position:absolute; left:0; right:0; bottom:0; width:100%; height:clamp(64px, 11vh, 100px); pointer-events:none; z-index:0; }
+  .garland{ overflow:visible; }
+
 </style>
 </head>
 <body class="locked">
+
+<!-- shared flower symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="mgC" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#ffd86b"/><stop offset="1" stop-color="#e98a12"/></radialGradient>
+    <symbol id="bloom" viewBox="-9 -9 18 18">
+      <g fill="#f08c0e" stroke="#b45309" stroke-width=".25">
+        <circle cx="0" cy="-5.8" r="3.6"/><circle cx="4.1" cy="-4.1" r="3.6"/><circle cx="5.8" cy="0" r="3.6"/><circle cx="4.1" cy="4.1" r="3.6"/>
+        <circle cx="0" cy="5.8" r="3.6"/><circle cx="-4.1" cy="4.1" r="3.6"/><circle cx="-5.8" cy="0" r="3.6"/><circle cx="-4.1" cy="-4.1" r="3.6"/>
+      </g>
+      <g fill="#f9a825"><circle cx="0" cy="-3" r="2.6"/><circle cx="2.8" cy="-1" r="2.6"/><circle cx="1.8" cy="2.4" r="2.6"/><circle cx="-1.8" cy="2.4" r="2.6"/><circle cx="-2.8" cy="-1" r="2.6"/></g>
+      <circle r="2.6" fill="url(#mgC)"/>
+    </symbol>
+    <symbol id="bloom2" viewBox="-9 -9 18 18">
+      <g fill="#fbbf24" stroke="#b45309" stroke-width=".25">
+        <circle cx="0" cy="-5.8" r="3.6"/><circle cx="4.1" cy="-4.1" r="3.6"/><circle cx="5.8" cy="0" r="3.6"/><circle cx="4.1" cy="4.1" r="3.6"/>
+        <circle cx="0" cy="5.8" r="3.6"/><circle cx="-4.1" cy="4.1" r="3.6"/><circle cx="-5.8" cy="0" r="3.6"/><circle cx="-4.1" cy="-4.1" r="3.6"/>
+      </g>
+      <g fill="#fcd34d"><circle cx="0" cy="-3" r="2.6"/><circle cx="2.8" cy="-1" r="2.6"/><circle cx="1.8" cy="2.4" r="2.6"/><circle cx="-1.8" cy="2.4" r="2.6"/><circle cx="-2.8" cy="-1" r="2.6"/></g>
+      <circle r="2.6" fill="url(#mgC)"/>
+    </symbol>
+    <symbol id="jasmine" viewBox="-9 -9 18 18">
+      <g fill="#fffdf4" stroke="#c9b27a" stroke-width=".4">
+        <ellipse cx="0" cy="-4.8" rx="2.7" ry="4.6"/>
+        <ellipse cx="0" cy="-4.8" rx="2.7" ry="4.6" transform="rotate(72)"/>
+        <ellipse cx="0" cy="-4.8" rx="2.7" ry="4.6" transform="rotate(144)"/>
+        <ellipse cx="0" cy="-4.8" rx="2.7" ry="4.6" transform="rotate(216)"/>
+        <ellipse cx="0" cy="-4.8" rx="2.7" ry="4.6" transform="rotate(288)"/>
+      </g>
+      <circle r="1.6" fill="#f0d98a"/>
+    </symbol>
+  </defs>
+</svg>
 
 <!-- ================= ENVELOPE INTRO ================= -->
 <div id="envelopeOverlay">
@@ -505,13 +549,16 @@
   <!-- ================= HERO ================= -->
   <section class="wrap">
     <div class="panel hero-panel" data-panel>
+      <div class="g-set g-left" id="gLeft" aria-hidden="true"></div>
+      <div class="g-set g-right" id="gRight" aria-hidden="true"></div>
+      <svg class="hero-floor" id="heroFloor" viewBox="0 0 1200 100" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
       <div class="panel-inner" data-inner>
         <div class="invocation-group">
           <div class="invocation">Sri Ganeshaya Namah</div>
           <div class="invocation secondary">Sri Hampi Virupaksha Prasanna</div>
         </div>
 
-        <svg class="garland" viewBox="0 0 480 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="garland" viewBox="0 -14 480 110" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M8 8 C 130 82, 350 82, 472 8" stroke="#b8933f" stroke-width="1" opacity=".5"/>
           <g id="budRow"></g>
         </svg>
@@ -789,14 +836,15 @@
   // ---- build jasmine-style bud row on hero garland ----
   const budRow = document.getElementById('budRow');
   if(budRow){
-    const n = 11;
+    const n = 15;
     for(let i=0;i<n;i++){
       const t = i/(n-1);
       const x = 8 + t*464;
       const y = 8 + Math.sin(t*Math.PI) * 70;
       const g = document.createElementNS('http://www.w3.org/2000/svg','g');
       g.setAttribute('transform', `translate(${x},${y})`);
-      g.innerHTML = `<circle r="3.4" fill="none" stroke="#b8933f" stroke-width="1"/><circle r="1.2" fill="#b8933f"/>`;
+      const ids = ['bloom','jasmine','bloom2']; const id = ids[i%3]; const sz = id==='jasmine' ? 20 : 27;
+      g.innerHTML = `<use href="#${id}" x="${-sz/2}" y="${-sz/2}" width="${sz}" height="${sz}"/>`;
       budRow.appendChild(g);
     }
   }
@@ -831,6 +879,37 @@
       }
     }
     swag.innerHTML = sHTML;
+  }
+
+  // ---- hanging marigold garlands on first page ----
+  function strand(left, len, delay, dur){
+    const n = Math.floor(len/13);
+    let t = `<svg width="26" height="${len+36}" viewBox="0 0 26 ${len+36}"><line x1="13" y1="0" x2="13" y2="${len}" stroke="#b8933f" stroke-width="1"/>`;
+    for(let i=0;i<n;i++) t += `<use href="#${i%3===2?'bloom2':'bloom'}" x="2" y="${i*13-3}" width="22" height="22"/>`;
+    t += `<path d="M13 ${len+5} L7 ${len+19} H19 Z" fill="#d9a441"/><circle cx="13" cy="${len+24}" r="4" fill="#f1c85c" stroke="#8b6b2e" stroke-width=".6"/><circle cx="13" cy="${len+30}" r="1.8" fill="#8b6b2e"/></svg>`;
+    return `<div class="strand" style="left:${left}px;animation-delay:${delay}s;animation-duration:${dur}s;height:${len+36}px">${t}</div>`;
+  }
+  const gL = document.getElementById('gLeft'), gR = document.getElementById('gRight');
+  if (gL) gL.innerHTML = strand(6,170,0,5.2)+strand(38,260,.8,6.1)+strand(70,120,1.6,4.6);
+  if (gR) gR.innerHTML = strand(6,120,.4,4.8)+strand(38,260,1.2,6.4)+strand(70,170,.2,5.4);
+
+  // ---- floral border at the bottom of the first page ----
+  const floor = document.getElementById('heroFloor');
+  if (floor){
+    const yAt = x => 64 + 14*Math.sin(x/95);
+    let d = '';
+    for(let x=0;x<=1200;x+=10) d += (x?' L':'M') + x + ' ' + yAt(x).toFixed(1);
+    let f = `<path d="${d}" fill="none" stroke="#6f9a52" stroke-width="2.2" opacity=".75"/>`;
+    for(let x=11;x<1200;x+=44){
+      const y = yAt(x);
+      f += `<ellipse cx="${x}" cy="${y-6}" rx="11" ry="4.2" fill="#7da35c" opacity=".85" transform="rotate(${(x/44)%2?-32:32} ${x} ${y-6})"/>`;
+    }
+    const ids = ['bloom','jasmine','bloom2','bloom','jasmine'];
+    for(let i=0,x=22;x<1200;x+=44,i++){
+      const id = ids[i%ids.length], sz = id==='jasmine' ? 22 : 30, y = yAt(x) + 6;
+      f += `<use href="#${id}" x="${x-sz/2}" y="${y-sz/2}" width="${sz}" height="${sz}"/>`;
+    }
+    floor.innerHTML = f;
   }
 
   // ---- scratch-to-reveal cards ----
@@ -940,44 +1019,75 @@
   window.addEventListener('resize', update);
   update();
 
-  // ---- ambient gold dust ----
-  const canvas = document.getElementById('petalCanvas');
-  const ctx2 = canvas.getContext('2d');
-  let W, H;
-  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  // ---- falling flowers & petals ----
+  const pc = document.getElementById('petalCanvas');
+  const px = pc.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let W = 0, H = 0;
+  function resize(){
+    W = window.innerWidth; H = window.innerHeight;
+    pc.width = W*dpr; pc.height = H*dpr;
+    px.setTransform(dpr,0,0,dpr,0,0);
+  }
   resize();
   window.addEventListener('resize', resize);
 
-  const COUNT = window.innerWidth < 720 ? 14 : 26;
-  const particles = [];
-  const colors = ['#d9bd7c', '#b8933f', '#efe0b6'];
-
-  function makeParticle(){
+  const palette = [
+    {c:'#f59e0b', d:'#b45309'},
+    {c:'#fbbf24', d:'#b45309'},
+    {c:'#ea580c', d:'#9a3412'},
+    {c:'#f472b6', d:'#9d174d'},
+    {c:'#e11d48', d:'#881337'},
+    {c:'#fffdf4', d:'#d4b25a', edge:'rgba(184,147,63,.6)'}
+  ];
+  function make(init){
+    const pal = palette[(Math.random()*palette.length)|0];
+    const flower = Math.random() < .42;
     return {
-      x: Math.random()*W, y: Math.random()*-H,
-      size: 2 + Math.random()*3,
-      speedY: 0.2 + Math.random()*0.4,
-      speedX: (Math.random()-0.5)*0.4,
-      sway: Math.random()*Math.PI*2,
-      swaySpeed: 0.008 + Math.random()*0.016,
-      color: colors[Math.floor(Math.random()*colors.length)]
+      x: Math.random()*W, y: init ? Math.random()*H : -24,
+      s: flower ? 7 + Math.random()*6 : 6 + Math.random()*6,
+      vy: .45 + Math.random()*.85,
+      sw: Math.random()*6.28, ss: .01 + Math.random()*.02, amp: .4 + Math.random()*.9,
+      r: Math.random()*6.28, vr: (Math.random()-.5)*.05,
+      a: .75 + Math.random()*.25, flower, pal
     };
   }
-  for(let i=0;i<COUNT;i++) particles.push(makeParticle());
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const COUNT = reduceMotion ? 0 : (window.innerWidth < 720 ? 22 : 40);
+  const fallers = [];
+  for(let i=0;i<COUNT;i++) fallers.push(make(true));
+
+  function drawFlower(sz, pal){
+    for(let k=0;k<6;k++){
+      px.save(); px.rotate(k*Math.PI/3);
+      px.beginPath(); px.ellipse(0, -sz*.55, sz*.36, sz*.6, 0, 0, Math.PI*2);
+      px.fillStyle = pal.c; px.fill();
+      if (pal.edge){ px.strokeStyle = pal.edge; px.lineWidth = .6; px.stroke(); }
+      px.restore();
+    }
+    px.beginPath(); px.arc(0,0,sz*.26,0,Math.PI*2); px.fillStyle = pal.d; px.fill();
+  }
+  function drawPetal(sz, pal){
+    px.beginPath(); px.moveTo(0,-sz);
+    px.bezierCurveTo(sz*.9,-sz*.5, sz*.7, sz*.7, 0, sz);
+    px.bezierCurveTo(-sz*.7, sz*.7, -sz*.9,-sz*.5, 0,-sz);
+    px.fillStyle = pal.c; px.fill();
+    if (pal.edge){ px.strokeStyle = pal.edge; px.lineWidth = .6; px.stroke(); }
+  }
 
   function loop(){
-    ctx2.clearRect(0,0,W,H);
-    particles.forEach(p=>{
-      p.sway += p.swaySpeed;
-      p.y += p.speedY;
-      p.x += p.speedX + Math.sin(p.sway)*0.3;
-      if(p.y > H + 10){ p.y = -10; p.x = Math.random()*W; }
-      ctx2.globalAlpha = .6;
-      ctx2.fillStyle = p.color;
-      ctx2.beginPath();
-      ctx2.arc(p.x, p.y, p.size, 0, Math.PI*2);
-      ctx2.fill();
+    px.clearRect(0,0,W,H);
+    fallers.forEach((p,i)=>{
+      p.sw += p.ss; p.y += p.vy; p.x += Math.sin(p.sw)*p.amp; p.r += p.vr;
+      if (p.y > H + 24) fallers[i] = make(false);
+      px.save();
+      px.translate(p.x, p.y); px.rotate(p.r);
+      px.scale(1, p.flower ? .6 + .4*Math.abs(Math.cos(p.sw)) : .45 + .55*Math.abs(Math.cos(p.r*1.3)));
+      px.globalAlpha = p.a;
+      if (p.flower) drawFlower(p.s, p.pal); else drawPetal(p.s, p.pal);
+      px.restore();
     });
+    px.globalAlpha = 1;
     requestAnimationFrame(loop);
   }
   loop();
